@@ -56,6 +56,17 @@ services:
             MAIL_PASSWORD: ""
             FROM_NAME: "Dowglas Santana"
             FROM_ADDRESS: dowglas.santana@examplec.com
+
+    listener-service:
+        build:
+            context: ../
+            dockerfile: listener-service/listener-service.dockerfile
+        restart: always
+        ports:
+            - "8085:80"
+        deploy:
+            mode: replicated
+            replicas: 1   
             
     postgres:
         image: 'postgres:14.2'
@@ -90,4 +101,14 @@ services:
         ports:
             - "1025:1025"
             - "8025:8025"
+
+    rabbitmq:
+        image: 'rabbitmq:3.9-alpine'
+        ports:
+            - "5672:5672"
+        deploy: 
+            mode: replicated
+            replicas: 1
+        volumes:
+            - ./db-data/rabbitmq/:/var/lib/rabbitmq/
 
